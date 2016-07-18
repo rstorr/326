@@ -1,6 +1,6 @@
 /**
  * DNA_Line stores a line of DNA from stdin as an object.
- * @author reuben
+ * @author reuben storr, Bayley millar
  *
  */
 public class DNA_Line {
@@ -13,7 +13,7 @@ public class DNA_Line {
 	 * @param state: is the inputed state of type char
 	 * @param compassDirs: is the sequence of the compass directions
 	 * @param statesAfterAnt: sequence representing the state
-	 * of the poin after the ant leaves
+	 * of the point after the ant leaves
 	 */
 	public DNA_Line(char state, char[] compassDirs, char[] statesAfterAnt) {
 		this.state = state;
