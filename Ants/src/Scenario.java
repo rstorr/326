@@ -107,8 +107,8 @@ public class Scenario {
 			for (char state : line.getStatesAfterAnt()) {
 				System.out.print(state);
 			}
+			System.out.println();
 		}
-		System.out.println();
 		System.out.println(totalSteps);
 		System.out.println("# " + (antXCoord - planeSize/2) + " " + (antYCoord - planeSize/2));
 	}
