@@ -86,8 +86,12 @@ public class Scenario {
 	 * @param the newState of type char
 	 */
 	public void changeCurCoordState(char newState) {
+		try{
 		plane[antXCoord][antYCoord] = newState;
 		System.out.println("cur coord: " + (antXCoord - planeSize/2) + " " + (antYCoord - planeSize/2));
+		}catch(ArrayIndexOutOfBoundsException e){
+			System.out.println("Sorry, this exceeds the plane size");
+		}
 	}
 
 	/**
