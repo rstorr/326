@@ -1,5 +1,5 @@
 /**
- * Scenario.java
+ * Scenario.java 
  * This class is used to respond to the inputs
  * @author Reuben Storr, Bayley Millar
  */
