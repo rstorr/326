@@ -3,7 +3,7 @@ import java.util.Scanner;
 /**
  * Ants class holds the main method. Takes the DNA and total steps input from stdin,
  * stores it in a Scenario object then executes the scenario.
- * @author reuben
+ * @author reuben storr and Bayley Millar
  *
  */
 public class Ants {
