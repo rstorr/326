@@ -28,7 +28,7 @@ public class Ants {
 			}
 		}
 		}catch(StringIndexOutOfBoundsException e){
-			System.out.println("please restart and enter valid input");
+			System.err.println("please restart and enter valid input");
 		}
 	}
 
