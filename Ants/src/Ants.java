@@ -11,6 +11,7 @@ public class Ants {
 	public static void main(String[] args) {
 		Scanner sc = new Scanner(System.in);
 		System.out.println("Enter scenarios:");
+		try{
 		while (sc.hasNextLine()) {
 			Scenario scenario = new Scenario();
 			String line = nextLine(sc);
@@ -26,6 +27,9 @@ public class Ants {
 				}
 			}
 		}
+		}catch(StringIndexOutOfBoundsException e){
+			System.out.println("please restart and enter valid input");
+		}
 	}
 
 	
@@ -38,9 +42,11 @@ public class Ants {
 	 */
 	private static String nextLine(Scanner sc) {
 		String line = sc.nextLine();
+		
 		while (line.substring(0, 1).equals('#') && sc.hasNextLine()) {
 			line = sc.nextLine();
 		}
+		
 		if (line.substring(0, 1).equals('#')) {
 			return null;
 		} else {
