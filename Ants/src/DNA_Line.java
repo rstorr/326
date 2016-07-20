@@ -1,6 +1,6 @@
 /**
  * DNA_Line stores a line of DNA from stdin as an object.
- * @author reuben storr, Bayley millar
+ * @author Reuben Storr, Bayley millar
  *
  */
 public class DNA_Line {
