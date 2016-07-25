@@ -3,45 +3,55 @@ public class RollinGroup extends Rollin {
 	@Override
 	public int decideRoll(int roll) {
 		int[] countOfFaces = new int[diceInGame];
-		int[] posToKeep = new int[diceInGame];
-				
+		int posToThrow = 0;
+		int groupsOfTwo = 0;
+
+		System.out.println(java.util.Arrays.toString(dice));
+
 		countOfFaces[roll-1]++;
-		
+
 		for (int i = 0; i < dice.length; i++){
 			countOfFaces[dice[i]-1]++;
 		}
-		
-		
+
+		outer:
 		for(int i = 0; i < countOfFaces.length; i++){
-			if (countOfFaces[i] == 2) {
+			if (countOfFaces[i] < 2) {
 				for (int j = 0; j < dice.length; j++){
-					if (dice[j]-1 == i){
-						posToKeep[j] = 1;
+					if (i+1 == dice[j]){
+						posToThrow = j;
+						break outer;
 					}
+				}
+			} else {
+				groupsOfTwo++;
+				if (groupsOfTwo == 3){
+					return rng.nextInt(diceInGame);
 				}
 			}
 		}
 
-		
-		for(int i = 0; i < posToKeep.length; i++){
-			if (posToKeep[i] == 0){
-				System.out.println("swap at pos " + i);
-				return i;
-			}
-		}
-		
-		return 10;
+		return posToThrow;
 
 	}
 
 	public static void main(String[] args) {
-		Rollin test = new RollinGroup();
-		int turns = 0;
-		while (!test.isComplete()) {
-			test.turn();
-			turns++;
+		int scenarios = 1000;
+		int turnsTotal = 0;
+		int i = 0;
+		while (i < scenarios) {
+			Rollin test = new RollinGroup();
+			int turns = 0;
+			while (!test.isComplete()) {
+				test.turn();
+				turns++;
+			}
+			System.out.println(turns);
+			i++;
+			turnsTotal += turns;
 		}
-		System.out.println(turns);
-	}
 
+	System.out.println("avg: " + turnsTotal/scenarios);
+
+}
 }
