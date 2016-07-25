@@ -4,6 +4,7 @@ public class RollinGroup extends Rollin {
 	public int decideRoll(int roll) {
 		/*
 		 * Can work out probability of next roll based on previous rolls.
+		 * bc's test edit
 		 */
 		return rng.nextInt(diceInGame + 2);
 
