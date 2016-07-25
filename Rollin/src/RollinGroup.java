@@ -6,8 +6,6 @@ public class RollinGroup extends Rollin {
 		int posToThrow = 0;
 		int groupsOfTwo = 0;
 
-		System.out.println(java.util.Arrays.toString(dice));
-
 		countOfFaces[roll-1]++;
 
 		for (int i = 0; i < dice.length; i++){
@@ -32,7 +30,6 @@ public class RollinGroup extends Rollin {
 		}
 
 		return posToThrow;
-
 	}
 
 	public static void main(String[] args) {
@@ -50,8 +47,5 @@ public class RollinGroup extends Rollin {
 			i++;
 			turnsTotal += turns;
 		}
-
-	System.out.println("avg: " + turnsTotal/scenarios);
-
 }
 }
