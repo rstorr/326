@@ -3,7 +3,6 @@ public class RollinGroup extends Rollin {
 	@Override
 	public int decideRoll(int roll) {
 		int[] countOfFaces = new int[diceInGame];
-		int posToThrow = 0;
 		int groupsOfTwo = 0;
 
 		countOfFaces[roll-1]++;
@@ -17,35 +16,22 @@ public class RollinGroup extends Rollin {
 			if (countOfFaces[i] < 2) {
 				for (int j = 0; j < dice.length; j++){
 					if (i+1 == dice[j]){
-						posToThrow = j;
-						break outer;
+						return j;
 					}
-				}
-			} else {
-				groupsOfTwo++;
-				if (groupsOfTwo == 3){
-					return rng.nextInt(diceInGame);
 				}
 			}
 		}
 
-		return posToThrow;
+		return rng.nextInt(diceInGame);
 	}
 
 	public static void main(String[] args) {
-		int scenarios = 1000;
-		int turnsTotal = 0;
-		int i = 0;
-		while (i < scenarios) {
-			Rollin test = new RollinGroup();
-			int turns = 0;
-			while (!test.isComplete()) {
-				test.turn();
-				turns++;
-			}
-			System.out.println(turns);
-			i++;
-			turnsTotal += turns;
+		Rollin test = new RollinGroup();
+		int turns = 0;
+		while (!test.isComplete()) {
+			test.turn();
+			turns++;
 		}
-}
+		System.out.println(turns);
+	}
 }
