@@ -1,3 +1,9 @@
+/**
+ * Contributors: Bayley Millar, Reuben Storr, Joe Benn, George Bonnici-carter, Sebastian buddle,
+ * Blake Carter
+ */
+
+
 public class RollinGroup extends Rollin {
 
 	@Override
