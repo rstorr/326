@@ -1,7 +1,41 @@
 import java.util.*;
 import java.awt.*;
 
+/**
+ * Ants class simulates (some of) the behaviour of crea-
+ * tures related to Langton’s ant. The ant moves on a plane according
+ * to its input, the DNA, and the ouput is its final location after completing
+ * x steps.
+ * 
+ * @author Reuben Storr, Bayley Millar.
+ */
 public class Ants {
+	private static ArrayList<String> DNA = new ArrayList<String>();
+
+
+	public static boolean isInteger(String s) {
+		try {
+			Integer.parseInt(s);
+		} catch (NumberFormatException e) {
+			return false;
+		}
+		return true;
+	}
+
+	public static int getCompassInt(char dir) {
+		switch (dir) {
+		case 'N':
+			return 0;
+		case 'E':
+			return 1;
+		case 'S':
+			return 2;
+		case 'W':
+			return 3;
+		default:
+			return 0;
+		}
+	}
 
 	public static boolean isInteger(String s) {
 		try {
@@ -29,18 +63,14 @@ public class Ants {
 
 	public static void main(String[] args) {
 		Scanner sc = new Scanner(System.in);
-		ArrayList<String> DNA = new ArrayList<String>();
 		int totalSteps = 0;
-		System.out.println("Enter scenarios:");
 
 		while (sc.hasNextLine()) {
 			String line = sc.nextLine();
 			if (isInteger(line)) {
 				totalSteps = Integer.parseInt(line);
 				scenario(DNA, totalSteps);
-			} else if (line.length() == 0) {
-				DNA.clear();
-			} else if (line.charAt(0) != '#') {
+			} else if (!line.startsWith("#") && !line.isEmpty()) {
 				DNA.add(line);
 			}
 		}
@@ -93,14 +123,14 @@ public class Ants {
 			break;
 		}
 	}
-
-	private static void printScenario(ArrayList<String> DNA, int totalSteps,
-			Point ant) {
+	
+	private static void printScenario(ArrayList<String> DNA, int totalSteps,Point ant) {
 		for (String line : DNA) {
 			System.out.println(line);
 		}
 		System.out.println(totalSteps);
 		System.out.println("# " + (int) ant.getX() + " " + (int) ant.getY() + "\n");
+		DNA.clear();
 	}
 
 }
