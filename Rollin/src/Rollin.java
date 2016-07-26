@@ -117,7 +117,7 @@ public abstract class Rollin {
      * @param indices the indices
      * @return true if the dice at those indices form a set, false otherwise.
      */
-    private boolean isSet(int[] indices) {
+    protected boolean isSet(int[] indices) {
         // First just get the values at those indices to save typing.
         final int a = dice[indices[0]];
         final int b = dice[indices[1]];
