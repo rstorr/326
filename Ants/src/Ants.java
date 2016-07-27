@@ -13,29 +13,8 @@ public class Ants {
 	private static ArrayList<String> DNA = new ArrayList<String>();
 
 
-	public static boolean isInteger(String s) {
-		try {
-			Integer.parseInt(s);
-		} catch (NumberFormatException e) {
-			return false;
-		}
-		return true;
-	}
+	
 
-	public static int getCompassInt(char dir) {
-		switch (dir) {
-		case 'N':
-			return 0;
-		case 'E':
-			return 1;
-		case 'S':
-			return 2;
-		case 'W':
-			return 3;
-		default:
-			return 0;
-		}
-	}
 
 	public static boolean isInteger(String s) {
 		try {
