@@ -6,14 +6,13 @@ import java.util.Scanner;
  */
 public class Arithmetic {
     private static ArrayList<Character> correctOperations = new ArrayList<>();
+    private static final char[] possOps = {'+', '*'};
 
     public static void main(String args[]) {
         Scanner sc = new Scanner(System.in);
         ArrayList<Integer> numbers = new ArrayList<>();
         ArrayList<Character> operations = new ArrayList<>();
         boolean firstLine = true;
-
-        char[] possOperations = {'+', '*'};
 
         while (sc.hasNextLine()) {
             String line = sc.nextLine();
@@ -27,9 +26,9 @@ public class Arithmetic {
                 firstLine = false;
             } else {
                 char order = lineArr[1].charAt(0);
-                findFormula(numbers.size() - 1, possOperations, order,
-                        numbers, operations, Integer.parseInt(lineArr[0]));
-                if (correctOperations.isEmpty()){
+                int target = Integer.parseInt(lineArr[0]);
+                findFormula(order, numbers, operations, target);
+                if (correctOperations.isEmpty() && numbers.get(0) != target){
                     System.out.println(order + " impossible");
                 } else {
                     System.out.print(order + " ");
@@ -47,81 +46,75 @@ public class Arithmetic {
         }
     }
 
-    private static int calculateL(int sum, ArrayList<Integer> numbers, ArrayList<Character> operations) {
+    private static int calculateL(boolean firstRun, int sum, ArrayList<Integer> numbers, ArrayList<Character> operations) {
 
-        if (numbers.size() > 1) {
-            if (operations.get(0) == '+') {
-                sum += numbers.get(0) + numbers.get(1);
-            } else {
-                sum += numbers.get(0) * numbers.get(1);
-            }
+        if (firstRun){
+            sum = numbers.get(0);
             numbers.remove(0);
-            numbers.remove(0);
-            operations.remove(0);
-        } else if (numbers.size() == 1) {
+        }
+
+        if (numbers.size() > 0) {
             if (operations.get(0) == '+') {
                 sum += numbers.get(0);
-            } else {
+            } else if (operations.get(0) == '*'){
                 sum *= numbers.get(0);
             }
             numbers.remove(0);
             operations.remove(0);
-
         } else {
             return sum;
         }
 
-        return calculateL(sum, numbers, operations);
+        return calculateL(false, sum, numbers, operations);
 
     }
 
-    private static int calculateN(ArrayList<Integer> numbers, ArrayList<Character> operations) {
+    private static int calculateN(final ArrayList<Integer> numbers, final ArrayList<Character> operations) {
         int sum = 0;
 
+        ArrayList<Integer> nums = new ArrayList<>(numbers);
+        ArrayList<Character> ops = new ArrayList<>(operations);
+
         //calculate all the multiplication.
-       for (int i = 0; i < operations.size(); i++){
-           if (operations.get(i) == '*') {
-               int multiplySum = numbers.get(i) * numbers.get(i + 1);
-               numbers.remove(i+1);
-               numbers.remove(i);
-               numbers.add(i, multiplySum);
-               operations.remove(i);
-           }
-       }
+        for (int i = 0; i < ops.size(); i++){
+            if (ops.get(i) == '*') {
+                int multiplySum = nums.get(i) * nums.get(i + 1);
+                nums.remove(i);
+                nums.remove(i);
+                nums.add(i, multiplySum);
+                ops.remove(i);
+                i -= 1;
+            }
+        }
 
-       for (Integer n : numbers){
-           sum += n;
-       }
+        for (Integer n : nums){
+            sum += n;
+        }
 
-       return sum;
+        return sum;
     }
 
-    private static void findFormula(int maxLen, char[] possOps, char order, ArrayList<Integer> numbers, ArrayList<Character> operations,
-                                    int target) {
+    private static void findFormula(final char order, final ArrayList<Integer> numbers,
+                                    ArrayList<Character> operations, final int target) {
 
-        if (operations.size() == maxLen){
-            ArrayList<Integer> nums = new ArrayList<>();
-            nums.addAll(numbers);
-            ArrayList<Character> ops = new ArrayList<>();
-            ops.addAll(operations);
-
+        if (operations.size() == numbers.size() - 1){
+            ArrayList<Integer> nums = new ArrayList<>(numbers);
+            ArrayList<Character> ops = new ArrayList<>(operations);
             if (order == 'N') {
                 if (calculateN(nums, ops) == target) {
                     correctOperations = operations;
                 }
             } else if (order == 'L') {
-                if (calculateL(0, nums, ops) == target) {
+                if (calculateL(true, 0, nums, ops) == target) {
                     correctOperations = operations;
                 }
             }
         } else {
-            for (int i = 0; i < possOps.length; i++) {
-                ArrayList<Character> oldOps = new ArrayList<>();
-                oldOps.addAll(operations);
-                ArrayList<Character> newOps = new ArrayList<>();
-                newOps.addAll(operations);
-                newOps.add(possOps[i]);
-                findFormula(maxLen, possOps, order, numbers,
+            for (char op: possOps) {
+                ArrayList<Character> oldOps = new ArrayList<>(operations);
+                ArrayList<Character> newOps = new ArrayList<>(operations);
+                newOps.add(op);
+                findFormula(order, numbers,
                         newOps, target);
                 operations = oldOps;
             }
