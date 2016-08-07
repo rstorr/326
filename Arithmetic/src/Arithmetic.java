@@ -114,8 +114,7 @@ public class Arithmetic {
         } else {
             for (char op: possibleOperations) {
                 final ArrayList<Character> oldOps = new ArrayList<>(operations);
-                final
-                ArrayList<Character> newOps = new ArrayList<>(operations);
+                final ArrayList<Character> newOps = new ArrayList<>(operations);
                 newOps.add(op);
                 findFormula(order, numbers, newOps, target);
                 operations = oldOps;
