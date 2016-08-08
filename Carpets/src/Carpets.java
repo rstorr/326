@@ -1,5 +1,12 @@
 import java.util.*;
 
+/**
+ * Given a stock of carpet strips and a carpet type Carpets class will
+ * output a carpet by sewing together the strips that is of the
+ * specified carpet type.
+ *
+ * @author Reuben Storr, Joe Benn, Bayley Millar, George Bonnici-Carter, Blake Carter
+ */
 public class Carpets {
     final private static int NO_MATCHES = 0;
     final private static int MAX_MATCHES = 1;
@@ -11,7 +18,6 @@ public class Carpets {
     private static ArrayList<char[]> correctCarpet;
     private static int carpetSize;
     private static int carpetType;
-
 
     public static void main(String[] args) {
         Scanner sc = new Scanner(System.in);
@@ -48,7 +54,7 @@ public class Carpets {
                     break;
             }
 
-            permutations(inputCarpetStrips, new Stack<>());
+            generateCarpets(inputCarpetStrips, new Stack<>());
 
             if (correctCarpet == null) {
                 System.out.println("not possible");
@@ -63,7 +69,8 @@ public class Carpets {
                 if (carpetType == MAX_MATCHES){
                     System.out.println(curMatches);
                 } else if (carpetType == BALANCED_MATCHES){
-                    System.out.println(Math.abs((curMatches) - (carpetSize - curMatches*2)));
+                    System.out.println(
+                            Math.abs((curMatches) - (carpetSize - curMatches*2)));
                 }
             }
         } else {
@@ -71,9 +78,9 @@ public class Carpets {
         }
     }
 
-    private static void permutations(ArrayList<char[]> strips, Stack<char[]> permutation) {
-        if(permutation.size() * stripLength == carpetSize) {
-            final ArrayList<char[]> carpet = new ArrayList<>(permutation);
+    private static void generateCarpets(ArrayList<char[]> strips, Stack<char[]> stack) {
+        if(stack.size() * stripLength == carpetSize) {
+            final ArrayList<char[]> carpet = new ArrayList<>(stack);
             final int matches = getMatches(carpet);
             if (carpetType == NO_MATCHES) {
                 if (matches == 0) {
@@ -95,12 +102,12 @@ public class Carpets {
 
         }
 
-        ArrayList<char[]> availableItems = new ArrayList<>(strips);
+        final ArrayList<char[]> availableItems = new ArrayList<>(strips);
         for(char[] strip : availableItems) {
-            permutation.push(strip);
+            stack.push(strip);
             strips.remove(strip);
-            permutations(strips, permutation);
-            strips.add(permutation.pop());
+            generateCarpets(strips, stack);
+            strips.add(stack.pop());
         }
     }
 
