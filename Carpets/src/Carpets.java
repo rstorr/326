@@ -63,7 +63,7 @@ public class Carpets {
                 if (carpetType == MAX_MATCHES){
                     System.out.println(curMatches);
                 } else if (carpetType == BALANCED_MATCHES){
-                    System.out.println(Math.abs(carpetSize - curMatches));
+                    System.out.println(Math.abs((curMatches) - (carpetSize - curMatches*2)));
                 }
             }
         } else {
