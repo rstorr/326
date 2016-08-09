@@ -8,20 +8,21 @@ import java.util.*;
  * @author Reuben Storr, Joe Benn, Bayley Millar, George Bonnici-Carter, Blake Carter
  */
 public class Carpets {
-    final private static int NO_MATCHES = 0;
-    final private static int MAX_MATCHES = 1;
-    final private static int BALANCED_MATCHES = 2;
+    private enum Type {
+        NO_MATCHES, MAX_MATCHES, BALANCED_MATCHES
+    }
+
     final private static ArrayList<char[]> inputCarpetStrips = new ArrayList<>();
 
     private static int stripLength = 0;
     private static int curMatches = 0;
     private static ArrayList<char[]> correctCarpet;
-    private static int carpetSize;
-    private static int carpetType;
+    private static int stripsNeeded;
+    private static Type carpetType;
 
     public static void main(String[] args) {
         Scanner sc = new Scanner(System.in);
-        carpetSize = Integer.valueOf(args[1]);
+        stripsNeeded = Integer.valueOf(args[1]);
 
         if (sc.hasNextLine()){
             final String line = sc.nextLine();
@@ -41,16 +42,16 @@ public class Carpets {
             }
         }
 
-        if (inputCarpetStrips.size() * stripLength >= carpetSize) {
+        if (inputCarpetStrips.size() >= stripsNeeded) {
             switch (args[0]) {
                 case "-n":
-                    carpetType = NO_MATCHES;
+                    carpetType = Type.NO_MATCHES;
                     break;
                 case "-m":
-                    carpetType = MAX_MATCHES;
+                    carpetType = Type.MAX_MATCHES;
                     break;
                 case "-b":
-                    carpetType = BALANCED_MATCHES;
+                    carpetType = Type.BALANCED_MATCHES;
                     break;
             }
 
@@ -66,11 +67,12 @@ public class Carpets {
                     System.out.println();
                 }
 
-                if (carpetType == MAX_MATCHES){
+                if (carpetType == Type.MAX_MATCHES){
                     System.out.println(curMatches);
-                } else if (carpetType == BALANCED_MATCHES){
+                } else if (carpetType == Type.BALANCED_MATCHES){
                     System.out.println(
-                            Math.abs((curMatches) - (carpetSize - curMatches*2)));
+                            Math.abs(curMatches - (
+                                    (stripsNeeded * stripLength) - curMatches*2)));
                 }
             }
         } else {
@@ -79,20 +81,20 @@ public class Carpets {
     }
 
     private static void generateCarpets(ArrayList<char[]> strips, Stack<char[]> stack) {
-        if(stack.size() * stripLength == carpetSize) {
+        if(stack.size() == stripsNeeded) {
             final ArrayList<char[]> carpet = new ArrayList<>(stack);
             final int matches = getMatches(carpet);
-            if (carpetType == NO_MATCHES) {
+            if (carpetType == Type.NO_MATCHES) {
                 if (matches == 0) {
                     correctCarpet = carpet;
                 }
-            } else if (carpetType == MAX_MATCHES) {
+            } else if (carpetType == Type.MAX_MATCHES) {
                 if (matches > curMatches) {
                     curMatches = matches;
                     correctCarpet = carpet;
                 }
-            } else if (carpetType == BALANCED_MATCHES) {
-                final int middle = carpetSize / 2;
+            } else if (carpetType == Type.BALANCED_MATCHES) {
+                final int middle = (stripsNeeded * stripLength) / 2;
                 if (Math.abs(middle - matches) <
                         Math.abs(middle - curMatches)) {
                     curMatches = matches;
