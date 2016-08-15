@@ -104,12 +104,14 @@ public class Carpets {
 
         }
 
-        final ArrayList<char[]> availableItems = new ArrayList<>(strips);
-        for(char[] strip : availableItems) {
-            stack.push(strip);
-            strips.remove(strip);
-            generateCarpets(strips, stack);
-            strips.add(stack.pop());
+        if(stack.size() < stripsNeeded) {
+            final ArrayList<char[]> availableItems = new ArrayList<>(strips);
+            for (char[] strip : availableItems) {
+                stack.push(strip);
+                strips.remove(strip);
+                generateCarpets(strips, stack);
+                strips.add(stack.pop());
+            }
         }
     }
 
