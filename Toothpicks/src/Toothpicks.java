@@ -12,7 +12,9 @@ import java.util.*;
  * @author Reuben Storr, Bayley Millar
  */
 class Toothpicks extends JFrame {
-    private final static int GRID_SIZE = 700;
+    private static int GRID_SIZE = 700;
+    private static int GRID_X = 700;
+    private static int GRID_Y = 700;
     private int lineLength = 50;
     private Double ratio = 1.0;
     private int generations;
@@ -29,7 +31,18 @@ class Toothpicks extends JFrame {
         this.generations = generations;
         JPanel panel=new JPanel();
         getContentPane().add(panel);
-        setSize(GRID_SIZE, GRID_SIZE);
+
+        if (generations < 2){
+            GRID_X = lineLength;
+            GRID_Y = lineLength;
+        } else if (generations % 2 == 0){
+            GRID_X = (generations-2) * lineLength;
+            GRID_Y = (generations-3) * lineLength;
+        } else {
+            GRID_X = (generations-2) * lineLength;
+            GRID_Y = (generations-2) * lineLength;
+        }
+        setSize(GRID_X, GRID_Y);
     }
 
     public static void main(String []args){
@@ -54,10 +67,10 @@ class Toothpicks extends JFrame {
         int linesInGeneration = 2;
         boolean drawVerticle = true;
 
-        g.drawLine(GRID_SIZE/2 - lineLength /2, GRID_SIZE/2,
-                GRID_SIZE/2 + lineLength /2, GRID_SIZE/2);
-        endPoints.add(new Point(GRID_SIZE/2 - lineLength /2, GRID_SIZE/2));
-        endPoints.add(new Point(GRID_SIZE/2 + lineLength /2, GRID_SIZE/2));
+        g.drawLine(GRID_X/2 - lineLength /2, GRID_Y/2,
+                GRID_X/2 + lineLength /2, GRID_Y/2);
+        endPoints.add(new Point(GRID_X/2 - lineLength /2, GRID_Y/2));
+        endPoints.add(new Point(GRID_X/2 + lineLength /2, GRID_Y/2));
 
         while (generationsCreated < generations) {
             int linesDrawn = 0;
