@@ -12,10 +12,9 @@ import java.util.*;
  * @author Reuben Storr, Bayley Millar
  */
 class Toothpicks extends JFrame {
-    private static int GRID_SIZE = 700;
-    private static int GRID_X = 700;
-    private static int GRID_Y = 700;
-    private int lineLength = 50;
+    private static int lineLength = 50;
+    private static int GRID_X = lineLength;
+    private static int GRID_Y = lineLength;
     private Double ratio = 1.0;
     private int generations;
 
@@ -24,7 +23,9 @@ class Toothpicks extends JFrame {
         this.generations = generations;
         JPanel panel=new JPanel();
         getContentPane().add(panel);
-        setSize(GRID_SIZE, GRID_SIZE);
+
+        windowSize();
+        setSize(GRID_X, GRID_Y);
     }
 
     public Toothpicks(int generations){
@@ -32,16 +33,7 @@ class Toothpicks extends JFrame {
         JPanel panel=new JPanel();
         getContentPane().add(panel);
 
-        if (generations < 2){
-            GRID_X = lineLength;
-            GRID_Y = lineLength;
-        } else if (generations % 2 == 0){
-            GRID_X = (generations-2) * lineLength;
-            GRID_Y = (generations-3) * lineLength;
-        } else {
-            GRID_X = (generations-2) * lineLength;
-            GRID_Y = (generations-2) * lineLength;
-        }
+        windowSize();
         setSize(GRID_X, GRID_Y);
     }
 
@@ -61,12 +53,23 @@ class Toothpicks extends JFrame {
         generateLines(g);
     }
 
+    private void windowSize(){
+        double temp = lineLength;
+        for(int i = 1; i < generations ; i++){
+            temp = temp*ratio;
+            if(i % 2 == 0){
+                GRID_Y += temp;
+            } else {
+                GRID_X += temp;
+            }
+        }
+    }
+
     private void generateLines(Graphics g) {
-        final Queue endPoints = new LinkedList();
+        final Queue<Point> endPoints = new LinkedList<Point>();
         int generationsCreated = 0;
         int linesInGeneration = 2;
         boolean drawVerticle = true;
-
         g.drawLine(GRID_X/2 - lineLength /2, GRID_Y/2,
                 GRID_X/2 + lineLength /2, GRID_Y/2);
         endPoints.add(new Point(GRID_X/2 - lineLength /2, GRID_Y/2));
