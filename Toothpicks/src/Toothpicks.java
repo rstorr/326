@@ -15,7 +15,7 @@ class Toothpicks extends JFrame {
     private static int GRID_SIZE = 700;
     private static int GRID_X = 700;
     private static int GRID_Y = 700;
-    private int lineLength = 50;
+    private int lineLength;
     private Double ratio = 1.0;
     private int generations;
 
@@ -24,6 +24,15 @@ class Toothpicks extends JFrame {
         this.generations = generations;
         JPanel panel=new JPanel();
         getContentPane().add(panel);
+
+        if (generations < 2) {
+            lineLength = GRID_SIZE;
+        } else if (generations % 2 == 0) {
+            lineLength = GRID_SIZE / (generations-3);
+        } else {
+            lineLength = GRID_SIZE / (generations-2);
+        }
+        
         setSize(GRID_SIZE, GRID_SIZE);
     }
 
@@ -32,17 +41,14 @@ class Toothpicks extends JFrame {
         JPanel panel=new JPanel();
         getContentPane().add(panel);
 
-        if (generations < 2){
-            GRID_X = lineLength;
-            GRID_Y = lineLength;
-        } else if (generations % 2 == 0){
-            GRID_X = (generations-2) * lineLength;
-            GRID_Y = (generations-3) * lineLength;
+        if (generations < 2) {
+            lineLength = GRID_SIZE;
+        } else if (generations % 2 == 0) {
+            lineLength = GRID_SIZE / (generations-3);
         } else {
-            GRID_X = (generations-2) * lineLength;
-            GRID_Y = (generations-2) * lineLength;
+            lineLength = GRID_SIZE / (generations-2);
         }
-        setSize(GRID_X, GRID_Y);
+        setSize(GRID_SIZE, GRID_SIZE);
     }
 
     public static void main(String []args){
