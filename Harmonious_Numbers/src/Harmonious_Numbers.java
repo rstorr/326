@@ -13,7 +13,7 @@ public class Harmonious_Numbers {
             new LinkedHashMap<Integer, Integer>();
 
     public static void main(String args[]){
-        for (int i = 220; i < 2000000 ; i++){
+        for (int i = 2; i < 2000000 ; i++){
             final int sumOne = sumOfProperDiv(i);
             final int sumTwo = sumOfProperDiv(sumOne);
 
@@ -38,16 +38,16 @@ public class Harmonious_Numbers {
 
     private static int sumOfProperDiv(int input){
         final int maxDiviser = (int) Math.sqrt(input);
-        int sum = 1;
+        int sum = 0;
         for(int i = 2; i <= maxDiviser; i++) {
             if(input % i == 0) {
+                final int correspondingD = input/i;
                 sum += i;
-                int correspondingD = input/i;
-                if(correspondingD != i)
+                if(correspondingD != i) {
                     sum += correspondingD;
+                }
             }
         }
-
         return sum;
     }
 }
