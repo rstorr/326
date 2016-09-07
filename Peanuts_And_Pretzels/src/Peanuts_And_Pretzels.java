@@ -36,7 +36,8 @@ public class Peanuts_And_Pretzels {
     }
 
     private static void snackChoice(final int numPeanuts, final int numPretzels,
-                             final ArrayList<String> peanutRules, final ArrayList<String> pretzelRules){
-        
+                             final ArrayList<String> peanutRules,
+                                    final ArrayList<String> pretzelRules){
+
     }
 }
