@@ -5,7 +5,8 @@ import java.util.*;
  * output a carpet by sewing together the strips that is of the
  * specified carpet type.
  *
- * @author Reuben Storr, Joe Benn, Bayley Millar, George Bonnici-Carter, Blake Carter
+ * @author Reuben Storr, Joe Benn, Bayley Millar, George Bonnici-Carter,
+ * Blake Carter
  */
 public class Carpets {
     private enum Type {
@@ -21,7 +22,7 @@ public class Carpets {
     private static Type carpetType;
 
     public static void main(String[] args) {
-        Scanner sc = new Scanner(System.in);
+        final Scanner sc = new Scanner(System.in);
         stripsNeeded = Integer.valueOf(args[1]);
 
         if (sc.hasNextLine()){
@@ -80,7 +81,8 @@ public class Carpets {
         }
     }
 
-    private static void generateCarpets(ArrayList<char[]> strips, Stack<char[]> stack) {
+    private static void generateCarpets(final ArrayList<char[]> strips,
+                                        final Stack<char[]> stack) {
         if(stack.size() == stripsNeeded) {
             final ArrayList<char[]> carpet = new ArrayList<>(stack);
             final int matches = getMatches(carpet);
@@ -115,7 +117,7 @@ public class Carpets {
         }
     }
 
-    private static int getMatches(ArrayList<char[]> carpetStrips){
+    private static int getMatches(final ArrayList<char[]> carpetStrips){
         int matches = 0;
 
         for (int i = 0; i < carpetStrips.size() - 1; i++){

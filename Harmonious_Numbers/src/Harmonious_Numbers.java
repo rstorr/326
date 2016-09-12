@@ -36,7 +36,7 @@ public class Harmonious_Numbers {
         }
     }
 
-    private static int sumOfProperDiv(int input){
+    private static int sumOfProperDiv(final int input){
         final int maxDiviser = (int) Math.sqrt(input);
         int sum = 0;
         for(int i = 2; i <= maxDiviser; i++) {
