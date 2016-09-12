@@ -6,7 +6,7 @@ import java.util.Scanner;
  * a set of fixed integers in either proper order i.e 1 + 2 * 3 = 7 or left-to-right
  * i.e 1 + 2 * 3 = 9.
  *
- * @author Reuben Storr 2016
+ * @author Reuben Storr
  */
 public class Arithmetic {
     private static final char[] possibleOperations = {'+', '*'};
@@ -40,7 +40,8 @@ public class Arithmetic {
                     System.out.print(order + " ");
                     for (int i = 0; i < numbers.size(); i++){
                         if (correctOps.size() > i){
-                            System.out.print(numbers.get(i) + " " + correctOps.get(i) + " ");
+                            System.out.print(numbers.get(i) + " " +
+                                    correctOps.get(i) + " ");
                         } else {
                             System.out.print(numbers.get(i));
                         }
@@ -52,8 +53,9 @@ public class Arithmetic {
         }
     }
 
-    private static int calculateL(boolean firstRun, int sum, ArrayList<Integer> numbers,
-                                  ArrayList<Character> operations) {
+    private static int calculateL(final boolean firstRun, int sum,
+                                  final ArrayList<Integer> numbers,
+                                  final ArrayList<Character> operations) {
         if (firstRun){
             sum = numbers.get(0);
             numbers.remove(0);
@@ -75,10 +77,10 @@ public class Arithmetic {
 
     }
 
-    private static int calculateN(final ArrayList<Integer> numbers, final ArrayList<Character> operations) {
+    private static int calculateN(final ArrayList<Integer> numbers,
+                                  final ArrayList<Character> operations) {
         int sum = 0;
 
-        //calculate all the multiplication.
         for (int i = 0; i < operations.size(); i++){
             if (operations.get(i) == '*') {
                 int multiplySum = numbers.get(i) * numbers.get(i + 1);

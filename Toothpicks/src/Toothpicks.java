@@ -12,18 +12,20 @@ import java.util.*;
  * @author Reuben Storr, Bayley Millar
  */
 class Toothpicks extends JFrame {
-    private static int GRID_SIZE = 350;
+    private static final int GRID_SIZE = 350;
     private int lineLength;
     private Double ratio = 1.0;
     private int generations;
 
-    private Toothpicks(int generations, Double ratio){
+    private Toothpicks(final int generations, final Double ratio){
+        final JPanel panel=new JPanel();
+        final double diff;
+        int lineLength = 50;
+        final int[] drawingDimensions = simulation(lineLength);
+
         this.ratio = ratio;
         this.generations = generations;
 
-        int lineLength = 50;
-        final int[] drawingDimensions = simulation(lineLength);
-        double diff;
         if (drawingDimensions[0] > drawingDimensions[1]){
             diff = (double) GRID_SIZE / drawingDimensions[0];
         } else {
@@ -32,17 +34,18 @@ class Toothpicks extends JFrame {
 
         this.lineLength = (int) Math.round((lineLength * diff) - 0.5);
 
-        JPanel panel=new JPanel();
         getContentPane().add(panel);
         setSize(GRID_SIZE, GRID_SIZE);
     }
 
-    private Toothpicks(int generations){
-        this.generations = generations;
-
+    private Toothpicks(final int generations){
+        final JPanel panel=new JPanel();
+        final double diff;
         int lineLength = 50;
         final int[] drawingDimensions = simulation(lineLength);
-        double diff;
+
+        this.generations = generations;
+
         if (drawingDimensions[0] > drawingDimensions[1]){
             diff = (double) GRID_SIZE / drawingDimensions[0];
         } else {
@@ -51,7 +54,6 @@ class Toothpicks extends JFrame {
 
         this.lineLength = (int) Math.round((lineLength * diff) - 0.5);
 
-        JPanel panel=new JPanel();
         getContentPane().add(panel);
         setSize(GRID_SIZE, GRID_SIZE);
     }
@@ -72,7 +74,7 @@ class Toothpicks extends JFrame {
         generateLines(g);
     }
 
-    private void generateLines(Graphics g) {
+    private void generateLines(final Graphics g) {
         final Queue<Point> endPoints = new LinkedList<>();
         int generationsCreated = 0;
         int linesInGeneration = 2;
