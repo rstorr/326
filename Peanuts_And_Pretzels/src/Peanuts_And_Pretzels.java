@@ -1,6 +1,15 @@
 
 import java.util.*;
 
+/**
+ * Peanuts_And_Pretzels takes as input the number of peanuts and pretzels left in
+ * two bowls as well as allowed snack choices. The program then computes whether a
+ * legal snack choice will eventually lead to the user taking the last snacks no matter
+ * what other users snack choices are. The problem is a theory of combinatorial games problem,
+ * related to but distinct from Nim.
+ *
+ * @author Reuben Storr
+ */
 public class Peanuts_And_Pretzels {
     private final static ArrayList<Integer> peanutMoveList = new ArrayList<>();
     private final static ArrayList<Integer> pretzelMoveList = new ArrayList<>();
@@ -23,26 +32,30 @@ public class Peanuts_And_Pretzels {
                 peanutMoveList.add(1);
                 pretzelMoveList.add(0);
 
-                if (numPeanuts > 1000 || numPretzels > 1000) {
+                if (numPeanuts < 1000 && numPretzels < 1000) {
+                    newScenario = false;
+                } else {
                     System.out.println("Error: number of peanuts or " +
                             "pretzels cannot be > 1000.");
-                } else {
-                    newScenario = false;
                 }
-            } else if (splitLine.length == 0 || !sc.hasNextLine()) {
-                removeInvalidMoves();
 
+            } else if (splitLine.length == 0 || !sc.hasNextLine()) {
+                boolean winningMove = false;
+
+                removeInvalidMoves();
                 for (int i = 0; i < peanutMoveList.size(); i++) {
-                    int peanutMove = peanutMoveList.get(i);
-                    int pretzelMove = pretzelMoveList.get(i);
-                    if (outcomeOfSnackChoice(peanutMove,
-                            pretzelMove,
-                            numPeanuts,
-                            numPretzels,
-                            true)) {
+                    final int peanutMove = peanutMoveList.get(i);
+                    final int pretzelMove = pretzelMoveList.get(i);
+                    if (outcomeOfSnackChoice(peanutMove, pretzelMove,
+                            numPeanuts, numPretzels, true)) {
+                        winningMove = true;
                         System.out.println(peanutMove + " " + pretzelMove);
                         break;
                     }
+                }
+
+                if (!winningMove){
+                    System.out.println("0 0");
                 }
 
                 newScenario = true;
@@ -65,24 +78,23 @@ public class Peanuts_And_Pretzels {
 
     private static boolean outcomeOfSnackChoice(final int curPeanutMove, final int curPretzelMove,
                                                 final int peanutsLeft, final int pretzelsLeft,
-                                                final boolean wasUsersTurn) {
+                                                final boolean usersTurn) {
 
-        if (peanutsLeft < 1 && pretzelsLeft < 1 && wasUsersTurn) {
+        if (peanutsLeft < 1 && pretzelsLeft < 1 && usersTurn) {
             return false;
-        }
-
-        if (peanutsLeft < 1 && pretzelsLeft < 1 && !wasUsersTurn) {
+        } else if (peanutsLeft < 1 && pretzelsLeft < 1 && !usersTurn) {
             return true;
         }
 
-        int peanutsAfterTurn = peanutsLeft - curPeanutMove;
-        int pretzelsAfterTurn = pretzelsLeft - curPretzelMove;
+        final int peanutsAfterTurn = peanutsLeft - curPeanutMove;
+        final int pretzelsAfterTurn = pretzelsLeft - curPretzelMove;
 
-        if (wasUsersTurn) {
+        if (usersTurn) {
             for (int i = 0; i < peanutMoveList.size(); i++) {
-                int peanutMove = peanutMoveList.get(i);
-                int pretzelMove = pretzelMoveList.get(i);
-                if (peanutsAfterTurn - peanutMove > -1 && pretzelsAfterTurn - pretzelMove > -1) {
+                final int peanutMove = peanutMoveList.get(i);
+                final int pretzelMove = pretzelMoveList.get(i);
+                if (peanutsAfterTurn - peanutMove > -1 &&
+                        pretzelsAfterTurn - pretzelMove > -1) {
                     if (!outcomeOfSnackChoice(
                             peanutMove,
                             pretzelMove,
@@ -97,9 +109,10 @@ public class Peanuts_And_Pretzels {
             return true;
         } else {
             for (int i = 0; i < peanutMoveList.size(); i++) {
-                int peanutMove = peanutMoveList.get(i);
-                int pretzelMove = pretzelMoveList.get(i);
-                if (peanutsAfterTurn - peanutMove > -1 && pretzelsAfterTurn - pretzelMove > -1) {
+                final int peanutMove = peanutMoveList.get(i);
+                final int pretzelMove = pretzelMoveList.get(i);
+                if (peanutsAfterTurn - peanutMove > -1 &&
+                        pretzelsAfterTurn - pretzelMove > -1) {
                     if (outcomeOfSnackChoice(
                             peanutMove,
                             pretzelMove,
@@ -115,11 +128,12 @@ public class Peanuts_And_Pretzels {
         }
     }
 
-    private static void addAllPossibleMoves(String peanutRule, String pretzelRule) {
+    private static void addAllPossibleMoves(final String peanutRule, final String pretzelRule) {
         final String operators = String.valueOf(peanutRule.charAt(0)) +
                 String.valueOf(pretzelRule.charAt(0));
         final int peanutNum = Character.getNumericValue(peanutRule.charAt(1));
         final int pretzelNum = Character.getNumericValue(pretzelRule.charAt(1));
+
         ArrayList<Integer> arr;
         ArrayList<Integer> arr2;
 
@@ -200,7 +214,7 @@ public class Peanuts_And_Pretzels {
 
     }
 
-    private static ArrayList<Integer> numbersLessThan(int num) {
+    private static ArrayList<Integer> numbersLessThan(final int num) {
         final ArrayList<Integer> arr = new ArrayList<>();
         for (int i = num - 1; i >= 0; i--) {
             arr.add(i);
@@ -208,7 +222,7 @@ public class Peanuts_And_Pretzels {
         return arr;
     }
 
-    private static ArrayList<Integer> numbersGreaterThan(int num, int max) {
+    private static ArrayList<Integer> numbersGreaterThan(final int num, final int max) {
         final ArrayList<Integer> arr = new ArrayList<>();
         for (int i = num + 1; i < max; i++) {
             arr.add(i);
