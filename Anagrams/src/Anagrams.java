@@ -4,15 +4,16 @@ import java.util.*;
 
 public class Anagrams {
 
-    private static final Map<Integer, ArrayList> dictionary = new HashMap<>();
-    private static final ArrayList<ArrayList<Integer>> wordLengthCombinations =
+    private static final Map<Integer, ArrayList<String>> dictionary = new HashMap<>();
+    private static final List<ArrayList<Integer>> wordLengthCombinations =
             new ArrayList<>();
+    private static final ArrayList<ArrayList<String>> anagrams = new ArrayList<>();
+
 
     public static void main(String[] args) {
         if(args.length == 2){
             final ArrayList<Character> inputChars = new ArrayList<>();
             final Scanner sc = new Scanner(System.in);
-            final ArrayList<ArrayList<String>> anagrams = new ArrayList<>();
 
             for(int i = 0; i < args[0].length(); i++){
                 if(Character.isLetter(args[0].charAt(i))){
@@ -25,25 +26,55 @@ public class Anagrams {
                 storeDictionary(sc);
             }
 
-            partition(inputChars.size(), inputChars.size(), new ArrayList<>());
+            getWordLengthCombs(inputChars.size(), inputChars.size(), new ArrayList<>());
 
             for (ArrayList<Integer> combination : wordLengthCombinations){
                 if (validCombination(combination, Integer.valueOf(args[1]))){
-                    anagrams.add(anagramsFromCombination(
+                    anagramsFromCombination(
                             combination,
                             new ArrayList<>(),
-                            new ArrayList<>(inputChars))
-                    );
+                            new ArrayList<>(inputChars));
                 }
             }
 
-            for (ArrayList<String> anagram : anagrams) {
-                System.out.println(anagram);
+            sortAnagrams();
+
+            for (ArrayList<String> anagram : anagrams){
+                for (String word : anagram) {
+                    System.out.print(word + " ");
+                }
+                System.out.println();
             }
         }
     }
 
-    private static void partition(int n, int max, ArrayList<Integer> nums) {
+    private static void sortAnagrams() {
+        Collections.sort(anagrams, (o1, o2) -> {
+            Collections.sort(o1);
+            Collections.reverse(o1);
+            Collections.sort(o2);
+            Collections.reverse(o2);
+            if (o1.size() == o2.size()) {
+                for (int i = 0; i < o1.size(); i++){
+                    if (o1.get(i).length() < o2.get(i).length()){
+                        return 1;
+                    } else if (o1.get(i).length() >
+                            o2.get(i).length()){
+                        return -1;
+                    }
+                }
+                return 0;
+            } else if (o1.size() < o2.size()) {
+                return 1;
+            } else {
+                return -1;
+            }
+        });
+    }
+
+
+    private static void getWordLengthCombs(
+            int n, int max, ArrayList<Integer> nums) {
         if (n == 0) {
             wordLengthCombinations.add(nums);
             return;
@@ -52,17 +83,19 @@ public class Anagrams {
         for (int i = Math.min(max, n); i >= 1; i--) {
             final ArrayList<Integer> arr = new ArrayList<>(nums);
             arr.add(i);
-            partition(n-i, i, arr);
+            getWordLengthCombs(n-i, i, arr);
         }
     }
 
-    private static ArrayList<String> anagramsFromCombination(
-            ArrayList<Integer> combination,
-            ArrayList<String> words,
-            ArrayList<Character> avaliableChars){
+    private static void anagramsFromCombination(
+            final ArrayList<Integer> combination,
+            final ArrayList<String> words,
+            final ArrayList<Character> avaliableChars){
 
-        if (combination.size() == 0){
-            return words;
+
+        if (combination.size() == 0 && avaliableChars.size() == 0){
+            anagrams.add(words);
+            return;
         }
 
         for(Integer i : combination){
@@ -72,21 +105,28 @@ public class Anagrams {
                 for (char c : s.toCharArray()) {
                     if(!avaliableChars.contains(c)){
                         avaliable = false;
+                        break;
                     }
                 }
 
                 if (avaliable) {
-                    combination.remove(i);
-                    words.add(s);
+                    ArrayList<Integer> newCom =
+                            new ArrayList<>(combination);
+                    ArrayList<String> newWords =
+                            new ArrayList<>(words);
+                    ArrayList<Character> newChars =
+                            new ArrayList<>(avaliableChars);
+
+                    newCom.remove(i);
+                    newWords.add(s);
                     for (char c : s.toCharArray()) {
-                        avaliableChars.remove(c);
+                        newChars.remove(Character.valueOf(c));
                     }
                     anagramsFromCombination(
-                            combination, words, avaliableChars);
+                            newCom, newWords, newChars);
                 }
             }
         }
-        return null;
     }
 
     private static boolean validCombination(ArrayList<Integer> combination, int max){
