@@ -13,6 +13,7 @@ import java.util.*;
 public class Peanuts_And_Pretzels {
     private final static ArrayList<Integer> peanutMoveList = new ArrayList<>();
     private final static ArrayList<Integer> pretzelMoveList = new ArrayList<>();
+    private final static HashMap<String, Boolean> cache = new HashMap<>();
     private static int numPeanuts;
     private static int numPretzels;
 
@@ -21,50 +22,56 @@ public class Peanuts_And_Pretzels {
         boolean newScenario = true;
 
         while (sc.hasNextLine()) {
-            final String[] splitLine = sc.nextLine().split(" ");
+            final String line = sc.nextLine();
+            final String[] splitLine = line.split(" ");
 
-            if (newScenario) {
+            if (line.equals("")){
+                calculate();
+                newScenario = true;
+            } else if (newScenario) {
                 numPeanuts = Integer.valueOf(splitLine[0]);
                 numPretzels = Integer.valueOf(splitLine[1]);
 
-                peanutMoveList.add(0);
-                pretzelMoveList.add(1);
-                peanutMoveList.add(1);
-                pretzelMoveList.add(0);
-
-                if (numPeanuts < 1000 && numPretzels < 1000) {
+                if ((numPeanuts + numPretzels) <= 1000) {
                     newScenario = false;
                 } else {
-                    System.out.println("Error: number of peanuts or " +
+                    System.err.println("number of peanuts and/or " +
                             "pretzels cannot be > 1000.");
                 }
-
-            } else if (splitLine.length == 0 || !sc.hasNextLine()) {
-                boolean winningMove = false;
-
-                removeInvalidMoves();
-                for (int i = 0; i < peanutMoveList.size(); i++) {
-                    final int peanutMove = peanutMoveList.get(i);
-                    final int pretzelMove = pretzelMoveList.get(i);
-                    if (outcomeOfSnackChoice(peanutMove, pretzelMove,
-                            numPeanuts, numPretzels, true)) {
-                        winningMove = true;
-                        System.out.println(peanutMove + " " + pretzelMove);
-                        break;
-                    }
-                }
-
-                if (!winningMove){
-                    System.out.println("0 0");
-                }
-
-                newScenario = true;
-                peanutMoveList.clear();
-                pretzelMoveList.clear();
             } else {
                 addAllPossibleMoves(splitLine[0], splitLine[1]);
             }
         }
+        calculate();
+    }
+
+    private static void calculate(){
+        boolean winningMove = false;
+
+        removeInvalidMoves();
+
+        peanutMoveList.add(0);
+        peanutMoveList.add(1);
+        pretzelMoveList.add(1);
+        pretzelMoveList.add(0);
+
+        for (int i = 0; i < peanutMoveList.size(); i++) {
+            final int peanutMove = peanutMoveList.get(i);
+            final int pretzelMove = pretzelMoveList.get(i);
+            if (outcomeOfSnackChoice(peanutMove, pretzelMove,
+                    numPeanuts, numPretzels, true)) {
+                winningMove = true;
+                System.out.println(peanutMove + " " + pretzelMove);
+                break;
+            }
+        }
+
+        if (!winningMove){
+            System.out.println("0 0");
+        }
+
+        peanutMoveList.clear();
+        pretzelMoveList.clear();
     }
 
     private static void removeInvalidMoves() {
@@ -72,13 +79,29 @@ public class Peanuts_And_Pretzels {
             if (peanutMoveList.get(i) == 0 && pretzelMoveList.get(i) == 0) {
                 peanutMoveList.remove(i);
                 pretzelMoveList.remove(i);
+            } else {
+
+                final int outerPeaMove = peanutMoveList.get(i);
+                final int outerPretMove = pretzelMoveList.get(i);
+
+                for (int j = i + 1; j < peanutMoveList.size(); j++) {
+                    final int innerPeaMove = peanutMoveList.get(j);
+                    final int innerPretMove = pretzelMoveList.get(j);
+
+                    if (outerPeaMove == innerPeaMove &&
+                            outerPretMove == innerPretMove) {
+                        peanutMoveList.remove(j);
+                        pretzelMoveList.remove(j);
+                    }
+                }
             }
         }
     }
 
-    private static boolean outcomeOfSnackChoice(final int curPeanutMove, final int curPretzelMove,
-                                                final int peanutsLeft, final int pretzelsLeft,
-                                                final boolean usersTurn) {
+    private static boolean outcomeOfSnackChoice(
+            final int curPeanutMove, final int curPretzelMove,
+            final int peanutsLeft, final int pretzelsLeft,
+            final boolean usersTurn) {
 
         if (peanutsLeft < 1 && pretzelsLeft < 1 && usersTurn) {
             return false;
@@ -95,14 +118,28 @@ public class Peanuts_And_Pretzels {
                 final int pretzelMove = pretzelMoveList.get(i);
                 if (peanutsAfterTurn - peanutMove > -1 &&
                         pretzelsAfterTurn - pretzelMove > -1) {
-                    if (!outcomeOfSnackChoice(
-                            peanutMove,
-                            pretzelMove,
-                            peanutsAfterTurn,
-                            pretzelsAfterTurn,
-                            false)
-                            ) {
-                        return false;
+                    final String toStr = String.valueOf(peanutMove) +
+                            pretzelMove +
+                            peanutsAfterTurn +
+                            pretzelsAfterTurn +
+                            false;
+
+                    if (cache.get(toStr) != null) {
+                        if (!cache.get(toStr)){
+                            return false;
+                        }
+                    } else {
+                        final Boolean outcome = outcomeOfSnackChoice(
+                                peanutMove,
+                                pretzelMove,
+                                peanutsAfterTurn,
+                                pretzelsAfterTurn,
+                                false);
+                        cache.put(toStr, outcome);
+
+                        if (!outcome){
+                            return false;
+                        }
                     }
                 }
             }
@@ -113,14 +150,28 @@ public class Peanuts_And_Pretzels {
                 final int pretzelMove = pretzelMoveList.get(i);
                 if (peanutsAfterTurn - peanutMove > -1 &&
                         pretzelsAfterTurn - pretzelMove > -1) {
-                    if (outcomeOfSnackChoice(
-                            peanutMove,
-                            pretzelMove,
-                            peanutsAfterTurn,
-                            pretzelsAfterTurn,
-                            true)
-                            ) {
-                        return true;
+                    final String toStr = String.valueOf(peanutMove) +
+                            pretzelMove +
+                            peanutsAfterTurn +
+                            pretzelsAfterTurn +
+                            true;
+
+                    if (cache.get(toStr) != null) {
+                        if (cache.get(toStr)){
+                            return true;
+                        }
+                    } else {
+                        final Boolean outcome = outcomeOfSnackChoice(
+                                peanutMove,
+                                pretzelMove,
+                                peanutsAfterTurn,
+                                pretzelsAfterTurn,
+                                true);
+                        cache.put(toStr, outcome);
+
+                        if (outcome){
+                            return true;
+                        }
                     }
                 }
             }
@@ -128,7 +179,9 @@ public class Peanuts_And_Pretzels {
         }
     }
 
-    private static void addAllPossibleMoves(final String peanutRule, final String pretzelRule) {
+    private static void addAllPossibleMoves(
+            final String peanutRule, final String pretzelRule) {
+
         final String operators = String.valueOf(peanutRule.charAt(0)) +
                 String.valueOf(pretzelRule.charAt(0));
         final int peanutNum = Character.getNumericValue(peanutRule.charAt(1));
@@ -222,7 +275,9 @@ public class Peanuts_And_Pretzels {
         return arr;
     }
 
-    private static ArrayList<Integer> numbersGreaterThan(final int num, final int max) {
+    private static ArrayList<Integer> numbersGreaterThan(
+            final int num, final int max) {
+
         final ArrayList<Integer> arr = new ArrayList<>();
         for (int i = num + 1; i < max; i++) {
             arr.add(i);
